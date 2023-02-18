@@ -6,6 +6,7 @@
 #include "game/graphics/opengl_renderer/DepthCue.h"
 #include "game/graphics/opengl_renderer/DirectRenderer.h"
 #include "game/graphics/opengl_renderer/EyeRenderer.h"
+#include "game/graphics/opengl_renderer/LightningRenderer.h"
 #include "game/graphics/opengl_renderer/ShadowRenderer.h"
 #include "game/graphics/opengl_renderer/SkyRenderer.h"
 #include "game/graphics/opengl_renderer/Sprite3.h"
@@ -155,6 +156,7 @@ void OpenGLRenderer::init_bucket_renderers_jak2() {
   init_bucket_renderer<TextureUploadHandler>("tex-l3-shrub", BucketCategory::TEX,
                                              BucketId::TEX_L3_SHRUB);
   init_bucket_renderer<Shrub>("shrub-l3-shrub", BucketCategory::SHRUB, BucketId::SHRUB_L3_SHRUB);
+  init_bucket_renderer<Merc2>("merc-l3-shrub", BucketCategory::MERC, BucketId::MERC_L3_SHRUB);
   init_bucket_renderer<TextureUploadHandler>("tex-l4-shrub", BucketCategory::TEX,
                                              BucketId::TEX_L4_SHRUB);
   // 110
@@ -247,6 +249,9 @@ void OpenGLRenderer::init_bucket_renderers_jak2() {
   init_bucket_renderer<TextureUploadHandler>("tex-l4-pris2", BucketCategory::TEX,
                                              BucketId::TEX_L4_PRIS2);
   init_bucket_renderer<Merc2>("merc-l4-pris2", BucketCategory::MERC, BucketId::MERC_L4_PRIS2);
+  init_bucket_renderer<TextureUploadHandler>("tex-l5-pris2", BucketCategory::TEX,
+                                             BucketId::TEX_L5_PRIS2);
+  init_bucket_renderer<Merc2>("merc-l5-pris2", BucketCategory::MERC, BucketId::MERC_L5_PRIS2);
   // 250
   init_bucket_renderer<TextureUploadHandler>("tex-l0-water", BucketCategory::TEX,
                                              BucketId::TEX_L0_WATER);
@@ -277,6 +282,8 @@ void OpenGLRenderer::init_bucket_renderers_jak2() {
                                              BucketId::TEX_L4_WATER);
   init_bucket_renderer<Merc2>("merc-l4-water", BucketCategory::MERC, BucketId::MERC_L4_WATER);
   // 290
+  init_bucket_renderer<TextureUploadHandler>("tex-l5-water", BucketCategory::TEX,
+                                             BucketId::TEX_L5_WATER);
   // 300
   init_bucket_renderer<TextureUploadHandler>("tex-lcom-water", BucketCategory::TEX,
                                              BucketId::TEX_LCOM_WATER);
@@ -288,6 +295,7 @@ void OpenGLRenderer::init_bucket_renderers_jak2() {
   init_bucket_renderer<TextureUploadHandler>("tex-all-sprite", BucketCategory::TEX,
                                              BucketId::TEX_ALL_SPRITE);
   init_bucket_renderer<Sprite3>("particles", BucketCategory::SPRITE, BucketId::PARTICLES);
+  init_bucket_renderer<LightningRenderer>("lightning", BucketCategory::OTHER, BucketId::LIGHTNING);
   init_bucket_renderer<TextureUploadHandler>("tex-all-warp", BucketCategory::TEX,
                                              BucketId::TEX_ALL_WARP);
   init_bucket_renderer<DirectRenderer>("debug-no-zbuf1", BucketCategory::OTHER,
@@ -599,6 +607,10 @@ void OpenGLRenderer::render(DmaFollower dma, const RenderOptions& settings) {
     if (settings.gpu_sync) {
       glFinish();
     }
+  }
+
+  if (settings.draw_loader_window) {
+    m_render_state.loader->draw_debug_window();
   }
 
   m_profiler.finish();
